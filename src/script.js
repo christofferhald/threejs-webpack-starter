@@ -1,6 +1,6 @@
 import './style.css'
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 // import * as dat from 'dat.gui'
 // const loader = new THREE.FontLoader();
 
@@ -15,41 +15,55 @@ const scene = new THREE.Scene()
 
 
 
+
 // Objects
 // const geometryTorus = new THREE.TorusGeometry( .7, .2, 40, 80 );
 // const geometryCone = new THREE.ConeGeometry( .5, 1, 32 );
-const geometry = new THREE.TorusKnotGeometry( .5, .25, 400, 50 );
+const objectTorusKnot1 = new THREE.TorusKnotGeometry(.6, .12, 1000, 80, 3, 7)
 
 
 
 
-const sphereMaterial = new THREE.MeshStandardMaterial( {
+// MeshPhongMaterial
+// MeshStandardMaterial
+const sphereMaterial = new THREE.MeshPhongMaterial( {
 	color: 0xffffff,
 	// reflectivity: 10,
-	emissive: 0x0000ff,
-	// emissiveIntensity: .4,
+	emissive: 0xff0000,
+	emissiveIntensity: .1,
+	specular: 0xffffff,
+    shininess: 5000,
 	// flatShading: true,
-	// metalness: .9
-	// wireframe: true
+	// metalness: 200,
+	// wireframe: true,
+	castShadow: false,
+	receiveShadow: false
+
 } );
 
 
 
+
+
 // Mesh
-const myTorus = new THREE.Mesh(geometry,sphereMaterial)
+const myTorus1 = new THREE.Mesh(objectTorusKnot1, sphereMaterial)
+const myTorus2 = new THREE.Mesh(objectTorusKnot1, sphereMaterial)
 // myTorus.castShadow = true; //default is false
 // myTorus.receiveShadow = false; //default
-scene.add(myTorus)
+scene.add(myTorus1)
+
+
+
 
 // Lights
-const pointLight1 = new THREE.PointLight(0xffffff, 2, 2.2)
+const pointLight1 = new THREE.PointLight(0xff0000, 1.5, 2.5)
 pointLight1.position.set(-0.5, 1, 2)
 
-const pointLight2 = new THREE.PointLight(0xff00ff, 1, 2.2)
-pointLight2.position.set(.5, -1, -1)
+const pointLight2 = new THREE.PointLight(0x0000ff, 0.8, 2.2)
+pointLight2.position.set(.5, -1, 1)
 // pointLight1.castShadow = true
 
-scene.add(pointLight1)
+scene.add(pointLight1, pointLight2)
 
 
 // Sizes
@@ -90,7 +104,8 @@ scene.add(camera)
  * Renderer
  */
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas
+    canvas: canvas,
+	alpha: true // transparent background
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -108,9 +123,14 @@ const tick = () => {
     const elapsedTime = clock.getElapsedTime()
 
     // Update objects
-    myTorus.rotation.x = .5 * elapsedTime
-	// myTorus.rotation.y = .25 * elapsedTime
-	myTorus.rotation.z = 1 * elapsedTime
+    myTorus1.rotation.x = .5 * elapsedTime
+	// myTorus1.rotation.y = .15 * elapsedTime
+	myTorus1.rotation.z = 1 * elapsedTime
+
+
+	// myTorus1.scale.y = Math.sin(1 * elapsedTime)
+	myTorus1.geometry.tube = .1
+	
 
     // Update Orbital Controls
     // controls.update()
@@ -123,3 +143,6 @@ const tick = () => {
 }
 
 tick()
+
+
+
